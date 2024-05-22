@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import db from "../models/index"
 import { where } from 'sequelize';
 import { raw } from 'body-parser';
+import e from 'express';
 
 
 const salt = bcrypt.genSaltSync(10);
@@ -90,7 +91,21 @@ let updateuserCRUDdata = (data) => {
         }
     })
 }
-
+let deleteuserbyid = (userid) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let user = await db.User.findOne({
+                where: { id: userid }
+            })
+            if (userid) {
+                await user.destroy();
+            }
+            resolve();
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 
 
 
@@ -104,5 +119,6 @@ module.exports = {
     hashUserPassword: hashUserPassword,
     getAlluser: getAlluser,
     getuserinfobyId: getuserinfobyId,
-    updateuserCRUDdata: updateuserCRUDdata
+    updateuserCRUDdata: updateuserCRUDdata,
+    deleteuserbyid: deleteuserbyid
 }
