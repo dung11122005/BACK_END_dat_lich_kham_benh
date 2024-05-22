@@ -1,6 +1,6 @@
 import { json } from "body-parser";
 import db from "../models/index"
-
+import CRUDservice from "../services/CRUDservice";
 let gethomepage = async (req, res) => {
     try {
         let data = await db.User.findAll();
@@ -13,6 +13,32 @@ let gethomepage = async (req, res) => {
     }
 }
 
+
+
+let getCRUD = (req, res) => {
+    return res.render('crud.ejs');
+}
+
+
+
+
+let postCRUD = async (req, res) => {
+    let message = await CRUDservice.createNewUser(req.body);
+    console.log(message)
+    //console.log(req.body)
+    return res.send('post crud')
+}
+
+
+
+
+
+
+
+
+
 module.exports = {
-    gethomepage: gethomepage
+    gethomepage: gethomepage,
+    getCRUD: getCRUD,
+    postCRUD: postCRUD
 }
