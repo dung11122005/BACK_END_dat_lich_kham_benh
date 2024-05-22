@@ -1,0 +1,45 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    table,
+    th,
+    td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+</style>
+
+<body>
+    <h1>hoang tan dung</h1>
+    <table style="width:100%">
+        <tr>
+            <th>EMAIL</th>
+            <th>FIRST NAME</th>
+            <th>LAST NAME</th>
+            <th>ADDRESS</th>
+        </tr>
+        <% for(let i=0; i < datatable.length; i++) { %>
+            <tr>
+                <td>
+                    <%= datatable[i].email %>
+                </td>
+                <td>
+                    <%= datatable[i].firstName %>
+                </td>
+                <td>
+                    <%= datatable[i].lastName %>
+                </td>
+                <td>
+                    <%= datatable[i].address %>
+                </td>
+            </tr>
+            <% } %>
+    </table>
+</body>
+
+</html>
