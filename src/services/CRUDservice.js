@@ -1,5 +1,7 @@
 import bcrypt from 'bcryptjs';
 import db from "../models/index"
+import { where } from 'sequelize';
+import { raw } from 'body-parser';
 
 
 const salt = bcrypt.genSaltSync(10);
@@ -34,10 +36,7 @@ let createNewUser = async (data) => {
         } catch (error) {
             reject(e)
         }
-
-
     })
-
 }
 let getAlluser = () => {
     return new Promise(async (resolve, reject) => {
@@ -51,10 +50,59 @@ let getAlluser = () => {
         }
     })
 }
+let getuserinfobyId = async (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let user = await db.User.findOne({
+                where: { id: userId },
+                raw: true
+            })
+            if (user) {
+                resolve(user);
+            } else {
+                resolve([]);
+            }
+
+        } catch (e) {
+            reject(e)
+        }
+    })
+
+}
+let updateuserCRUDdata = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let user = await db.User.findOne({
+                where: { id: data.id }
+            })
+            if (user) {
+                user.firstName = data.firstName
+                user.lastName = data.lastName
+                user.address = data.address
+                await user.save();
+                let allusers = await db.User.findAll();
+                resolve(allusers);
+            } else {
+                resolve();
+            }
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+
+
+
+
+
+
 
 
 module.exports = {
     createNewUser: createNewUser,
     hashUserPassword: hashUserPassword,
-    getAlluser: getAlluser
+    getAlluser: getAlluser,
+    getuserinfobyId: getuserinfobyId,
+    updateuserCRUDdata: updateuserCRUDdata
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>CRUD data user</title>
 </head>
 <style>
     table,
@@ -11,6 +11,26 @@
     td {
         border: 1px solid black;
         border-collapse: collapse;
+    }
+
+    .bnt-edit {
+        background-color: rgb(88, 223, 97);
+        outline: none;
+        border: none;
+        width: 60px;
+        height: 25px;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    .bnt-delete {
+        background-color: orange;
+        outline: none;
+        border: none;
+        width: 60px;
+        height: 25px;
+        border-radius: 3px;
+        cursor: pointer;
     }
 </style>
 
@@ -22,6 +42,7 @@
             <th>FIRST NAME</th>
             <th>LAST NAME</th>
             <th>ADDRESS</th>
+            <th>ACTION</th>
         </tr>
         <% for(let i=0; i < datatable.length; i++) { %>
             <tr>
@@ -36,6 +57,10 @@
                 </td>
                 <td>
                     <%= datatable[i].address %>
+                </td>
+                <td>
+                    <a href="/edit-crud?id=<%= datatable[i].id %>" class="bnt-edit">EDIT</a>
+                    <a href="/delete-crud" class="bnt-delete">DELETE</a>
                 </td>
             </tr>
             <% } %>

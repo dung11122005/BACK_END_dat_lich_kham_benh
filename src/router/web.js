@@ -11,9 +11,8 @@ let initwebrouter = (app) => {
 
     router.post('/post-crud', homecontrollers.postCRUD)
     router.get('/get-crud', homecontrollers.displaygetCRUD)
-
-
-
+    router.get('/edit-crud', homecontrollers.getEditCRUD)
+    router.post('/put-crud', homecontrollers.putCRUD)
 
 
 
