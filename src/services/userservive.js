@@ -23,8 +23,7 @@ let handleruserlogin = (email, password) => {
                     raw: true
                 })
                 if (user) {
-                    //let check = await bcrypt.compareSync(password, user.password); // false
-                    let check = true
+                    let check = await bcrypt.compareSync(password, user.password); // false
                     if (check) {
                         userdata.errcode = 0
                         userdata.errmessage = `ok`
@@ -52,15 +51,7 @@ let handleruserlogin = (email, password) => {
     })
 }
 
-let compareuserpassword = () => {
-    return new Promise((resolve, reject) => {
-        try {
 
-        } catch (e) {
-            reject(e);
-        }
-    })
-}
 let checkuseremail = (useremail) => {
     return new Promise(async (resolve, reject) => {
         try {
