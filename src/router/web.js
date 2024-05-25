@@ -19,7 +19,7 @@ let initwebrouter = (app) => {
 
 
     router.post('/api/login', usercontrollers.handlelogin)
-
+    router.get('/api/get-all-users', usercontrollers.handlegetallusers)
 
 
     return app.use('/', router);

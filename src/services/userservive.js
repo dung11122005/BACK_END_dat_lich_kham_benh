@@ -50,8 +50,6 @@ let handleruserlogin = (email, password) => {
         }
     })
 }
-
-
 let checkuseremail = (useremail) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -68,8 +66,34 @@ let checkuseremail = (useremail) => {
         }
     })
 }
+let getAllusers = (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let users = ''
+            if (userId === 'ALL') {
+                users = await db.User.findAll({
+                    attributes: {
+                        exclude: ['password']
+                    }
+                })
+            }
+            if (userId && userId !== 'ALL') {
+                users = await db.User.findOne({
+                    attributes: {
+                        exclude: ['password']
+                    },
+                    where: { id: userId },
+                })
+            }
+            resolve(users)
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 
 
 module.exports = {
     handleruserlogin: handleruserlogin,
+    getAllusers: getAllusers
 }
