@@ -23,8 +23,22 @@ let handlelogin = async (req, res) => {
     });
 }
 
+
+
+
+
+
+
 let handlegetallusers = async (req, res) => {
-    let id = req.body.id //All, ID
+    let id = req.query.id //All, ID
+
+    if (!id) {
+        return res.status(200).json({
+            errcode: 1,
+            errmessage: 'mising req parametor',
+            users: []
+        });
+    }
     let users = await userservice.getAllusers(id);
     console.log(users)
     return res.status(200).json({
@@ -35,7 +49,37 @@ let handlegetallusers = async (req, res) => {
 }
 
 
+
+
+
+
+let handlecreatenewuser = async (req, res) => {
+    let message = await userservice.creatnewuser(req.body)
+    console.log(message)
+    return res.status(200).json(message)
+}
+let handledituser = async (req, res) => {
+    let data = req.body
+    let message = await userservice.updateuserdata(data);
+    return res.status(200).json({ message })
+}
+let handledeleteuser = async (req, res) => {
+    if (!req.body.id) {
+        return res.status(200).json({
+            errcode: 1,
+            message: 'missing req parameters'
+        })
+    }
+    let message = await userservice.deleteuser(req.body.id)
+    console.log(message)
+    return res.status(200).json(message)
+}
 module.exports = {
     handlelogin: handlelogin,
-    handlegetallusers: handlegetallusers
+    handlegetallusers: handlegetallusers,
+    handlecreatenewuser: handlecreatenewuser,
+    handledituser: handledituser,
+    handledeleteuser: handledeleteuser,
+    handledituser: handledituser
+
 }

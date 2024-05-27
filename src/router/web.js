@@ -20,8 +20,9 @@ let initwebrouter = (app) => {
 
     router.post('/api/login', usercontrollers.handlelogin)
     router.get('/api/get-all-users', usercontrollers.handlegetallusers)
-
-
+    router.post('/api/create-new-user', usercontrollers.handlecreatenewuser)
+    router.put('/api/edit-user', usercontrollers.handledituser)
+    router.delete('/api/delete-user', usercontrollers.handledeleteuser)
     return app.use('/', router);
 }
 
