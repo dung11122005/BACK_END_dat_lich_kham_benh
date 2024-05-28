@@ -160,6 +160,7 @@ let deleteuser = (userid) => {
 let updateuserdata = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            //console.log('edit node js', data)
             if (!data.id) {
                 resolve({
                     errcode: 2,

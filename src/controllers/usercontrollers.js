@@ -61,7 +61,7 @@ let handlecreatenewuser = async (req, res) => {
 let handledituser = async (req, res) => {
     let data = req.body
     let message = await userservice.updateuserdata(data);
-    return res.status(200).json({ message })
+    return res.status(200).json(message)
 }
 let handledeleteuser = async (req, res) => {
     if (!req.body.id) {
