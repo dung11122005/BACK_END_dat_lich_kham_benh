@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 import { raw } from "body-parser";
 
 
+
 const salt = bcrypt.genSaltSync(10);
 
 
@@ -191,10 +192,39 @@ let updateuserdata = (data) => {
         }
     })
 }
+
+
+
+let getAllcodeservice = (typeinput) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!typeinput) {
+                resolve({
+                    errcode: 1,
+                    errmessage: 'missing required parametor'
+                })
+            } else {
+                let res = {}
+                let allcode = ''
+                allcode = await db.Allcode.findAll({
+                    where: { type: typeinput }
+                })
+                res.errcode = 0
+                res.data = allcode
+                resolve(res)
+            }
+        } catch (e) {
+            reject(e)
+        }
+
+    })
+}
+
 module.exports = {
     handleruserlogin: handleruserlogin,
     getAllusers: getAllusers,
     creatnewuser: creatnewuser,
     deleteuser: deleteuser,
-    updateuserdata: updateuserdata
+    updateuserdata: updateuserdata,
+    getAllcodeservice: getAllcodeservice
 }
