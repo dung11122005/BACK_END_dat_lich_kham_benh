@@ -77,6 +77,10 @@ let handledeleteuser = async (req, res) => {
 
 let getAllcode = async (req, res) => {
     try {
+        // setTimeout(async () => {
+        //     let data = await userservice.getAllcodeservice(req.query.type)
+        //     return res.status(200).json(data)
+        // }, 3000);
         let data = await userservice.getAllcodeservice(req.query.type)
         console.log('data', data)
         return res.status(200).json(data)
