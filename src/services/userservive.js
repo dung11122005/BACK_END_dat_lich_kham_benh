@@ -164,7 +164,7 @@ let updateuserdata = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             //console.log('edit node js', data)
-            if (!data.id) {
+            if (!data.id || !data.roleId || !data.positionId || !data.gender) {
                 resolve({
                     errcode: 2,
                     message: 'missing required parameters'
@@ -178,6 +178,10 @@ let updateuserdata = (data) => {
                 user.firstName = data.firstName
                 user.lastName = data.lastName
                 user.address = data.address
+                user.phonenumber = data.phoneNumber
+                user.roleId = data.roleId
+                user.positionId = data.positionId
+                user.gender = data.gender
                 await user.save();
                 resolve({
                     errcode: 0,
