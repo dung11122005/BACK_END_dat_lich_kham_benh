@@ -123,7 +123,8 @@ let creatnewuser = (data) => {
                     phonenumber: data.phonenumber,
                     gender: data.gender,
                     roleId: data.roleId,
-                    positionId: data.positionId
+                    positionId: data.positionId,
+                    image: data.avatar
                 })
                 resolve({
                     errcode: 0,
@@ -142,7 +143,7 @@ let deleteuser = (userid) => {
                 where: { id: userid }
             })
             if (!founduser) {
-                console.log(founduser)
+                //console.log(founduser)
                 resolve({
                     errcode: 2,
                     message: `the user int't `
@@ -164,7 +165,7 @@ let updateuserdata = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             //console.log('edit node js', data)
-            if (!data.id || !data.roleId || !data.positionId || !data.gender) {
+            if (!data.id) {
                 resolve({
                     errcode: 2,
                     message: 'missing required parameters'
@@ -182,6 +183,9 @@ let updateuserdata = (data) => {
                 user.roleId = data.roleId
                 user.positionId = data.positionId
                 user.gender = data.gender
+                if (data.avatar) {
+                    user.image = data.avatar
+                }
                 await user.save();
                 resolve({
                     errcode: 0,

@@ -40,7 +40,7 @@ let handlegetallusers = async (req, res) => {
         });
     }
     let users = await userservice.getAllusers(id);
-    console.log(users)
+    //console.log(users)
     return res.status(200).json({
         errcode: 0,
         errmessage: '0k',
@@ -55,7 +55,7 @@ let handlegetallusers = async (req, res) => {
 
 let handlecreatenewuser = async (req, res) => {
     let message = await userservice.creatnewuser(req.body)
-    console.log(message)
+    //console.log(message)
     return res.status(200).json(message)
 }
 let handledituser = async (req, res) => {
@@ -71,7 +71,7 @@ let handledeleteuser = async (req, res) => {
         })
     }
     let message = await userservice.deleteuser(req.body.id)
-    console.log(message)
+    //console.log(message)
     return res.status(200).json(message)
 }
 
@@ -82,10 +82,10 @@ let getAllcode = async (req, res) => {
         //     return res.status(200).json(data)
         // }, 3000);
         let data = await userservice.getAllcodeservice(req.query.type)
-        console.log('data', data)
+        //console.log('data', data)
         return res.status(200).json(data)
     } catch (e) {
-        console.log('get all code error', e)
+        //console.log('get all code error', e)
         return res.status(200).json({
             errcode: -1,
             errmessage: 'error from server'
