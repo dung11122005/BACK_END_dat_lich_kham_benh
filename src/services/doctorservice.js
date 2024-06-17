@@ -1,5 +1,6 @@
 import { where } from "sequelize"
 import db from "../models/index"
+import { asIs } from "sequelize"
 
 
 let getTopDoctorHome = (limitinput) => {
@@ -31,6 +32,57 @@ let getTopDoctorHome = (limitinput) => {
 }
 
 
+
+let getAllDoctors = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let doctors = await db.User.findAll({
+                where: { roleId: 'R2' },
+                attributes: {
+                    exclude: ['password', 'image']
+                }
+            })
+            resolve({
+                errcode: 0,
+                data: doctors
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+
+
+
+
+let SeveDetailInforDoctor = (inputData) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!inputData.doctorId || !inputData.contentHTML || !inputData.contentMarkdown) {
+                resolve({
+                    errcode: 1,
+                    errmessage: 'Missing parameter'
+                })
+            } else {
+                await db.Markdown.create({
+                    contentHTML: inputData.contentHTML,
+                    contentMarkdown: inputData.contentMarkdown,
+                    description: inputData.description,
+                    doctorId: inputData.doctorId
+                })
+                resolve({
+                    errcode: 0,
+                    errmessage: 'Save infor Doctor success!'
+                })
+            }
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 module.exports = {
-    getTopDoctorHome: getTopDoctorHome
+    getTopDoctorHome: getTopDoctorHome,
+    getAllDoctors: getAllDoctors,
+    SeveDetailInforDoctor: SeveDetailInforDoctor
 }

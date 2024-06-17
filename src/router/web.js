@@ -31,7 +31,8 @@ let initwebrouter = (app) => {
 
 
     router.get('/api/top-doctor-home', doctorcontrollers.getTopDoctorHome)
-
+    router.get('/api/get-all-doctors', doctorcontrollers.getAllDoctors)
+    router.post('/api/save-infor-doctors', doctorcontrollers.postInforDoctor)
 
 
 
