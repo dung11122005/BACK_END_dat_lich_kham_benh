@@ -1,6 +1,7 @@
 import { where } from "sequelize"
 import db from "../models/index"
-import { asIs } from "sequelize"
+
+
 
 
 let getTopDoctorHome = (limitinput) => {
@@ -81,8 +82,49 @@ let SeveDetailInforDoctor = (inputData) => {
         }
     })
 }
+
+
+
+let getDetailDoctorById = (inputId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!inputId) {
+                resolve({
+                    errcode: 1,
+                    errmessage: 'Missing required parameter!'
+                })
+            } else {
+                let data = await db.User.findOne({
+                    where: {
+                        id: inputId
+                    },
+                    attributes: {
+                        exclude: ['password']
+                    },
+                    include: [
+                        { model: db.Markdown, attributes: ['contentMarkdown', 'contentHTML', 'description'] },
+                        { model: db.Allcode, as: 'positionData', attributes: ['valueEn', 'valueVi'] },
+                    ],
+                    raw: true,
+                    nest: true
+                })
+                if (data && data.image) {
+                    data.image = new Buffer(data.image, 'base64').toString('binary')
+                }
+                if (!data) data = {}
+                resolve({
+                    errcode: 0,
+                    data: data
+                })
+            }
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 module.exports = {
     getTopDoctorHome: getTopDoctorHome,
     getAllDoctors: getAllDoctors,
-    SeveDetailInforDoctor: SeveDetailInforDoctor
+    SeveDetailInforDoctor: SeveDetailInforDoctor,
+    getDetailDoctorById: getDetailDoctorById
 }

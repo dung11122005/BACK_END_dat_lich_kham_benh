@@ -25,7 +25,6 @@ let initwebrouter = (app) => {
     router.post('/api/create-new-user', usercontrollers.handlecreatenewuser)
     router.put('/api/edit-user', usercontrollers.handledituser)
     router.delete('/api/delete-user', usercontrollers.handledeleteuser)
-
     router.get('/api/allcode', usercontrollers.getAllcode)
 
 
@@ -33,6 +32,7 @@ let initwebrouter = (app) => {
     router.get('/api/top-doctor-home', doctorcontrollers.getTopDoctorHome)
     router.get('/api/get-all-doctors', doctorcontrollers.getAllDoctors)
     router.post('/api/save-infor-doctors', doctorcontrollers.postInforDoctor)
+    router.get('/api/get-detail-doctor-by-id', doctorcontrollers.getDetailDoctorById)
 
 
 
