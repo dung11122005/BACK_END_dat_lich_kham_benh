@@ -1,10 +1,11 @@
 import { where } from "sequelize"
 import db from "../models/index"
 import { raw } from "body-parser"
+import _, { reject } from 'lodash'
+require('dotenv').config()
 
 
-
-
+const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE
 let getTopDoctorHome = (limitinput) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -138,9 +139,91 @@ let getDetailDoctorById = (inputId) => {
         }
     })
 }
+
+
+
+let bulkCreateSchedule = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.arrSchedule || !data.doctorId || !data.formatedDate) {
+                resolve({
+                    errcode: 1,
+                    errmessage: 'Missing required param!'
+                })
+            } else {
+                let schedule = data.arrSchedule
+                if (schedule && schedule.length > 0) {
+                    schedule = schedule.map((item => {
+                        item.maxNumber = MAX_NUMBER_SCHEDULE
+                        return item
+                    }))
+                }
+                //console.log('hoi dan it channel: data send:', schedule)
+                let exesting = await db.Schedule.findAll({
+                    where: { doctorId: data.doctorId, date: data.formatedDate },
+                    attributes: ['doctorId', 'date', 'timeType', 'maxNumber'],
+                    row: true
+                })
+
+                if (exesting && exesting.length > 0) {
+                    exesting = exesting.map(item => {
+                        item.date = new Date(item.date).getTime()
+                        return item
+                    })
+                }
+
+                let toCreate = _.differenceWith(schedule, exesting, (a, b) => {
+                    return a.timeType === b.timeType && a.date === b.date
+                })
+                console.log('exesting', exesting)
+                console.log('check different=========================:', toCreate)
+                if (toCreate && toCreate.length > 0) {
+                    await db.Schedule.bulkCreate(toCreate)
+                }
+
+                resolve({
+                    errcode: 0,
+                    errmessage: 'ok'
+                })
+            }
+
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+let getScheduleByDate = (doctorId, date) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!doctorId || !date) {
+                resolve({
+                    errcode: 1,
+                    errmessage: 'missing required parameter!'
+                })
+            } else {
+                let dataSchedule = await db.Schedule.findAll({
+                    where: {
+                        doctorId: doctorId,
+                        date: date
+                    }
+                })
+                if (!dataSchedule) dataSchedule = []
+                resolve({
+                    errcode: 0,
+                    data: dataSchedule
+                })
+            }
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 module.exports = {
     getTopDoctorHome: getTopDoctorHome,
     getAllDoctors: getAllDoctors,
     SeveDetailInforDoctor: SeveDetailInforDoctor,
-    getDetailDoctorById: getDetailDoctorById
+    getDetailDoctorById: getDetailDoctorById,
+    bulkCreateSchedule: bulkCreateSchedule,
+    getScheduleByDate: getScheduleByDate
 }
