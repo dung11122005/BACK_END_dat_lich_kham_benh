@@ -165,18 +165,11 @@ let bulkCreateSchedule = (data) => {
                     row: true
                 })
 
-                if (exesting && exesting.length > 0) {
-                    exesting = exesting.map(item => {
-                        item.date = new Date(item.date).getTime()
-                        return item
-                    })
-                }
-
                 let toCreate = _.differenceWith(schedule, exesting, (a, b) => {
-                    return a.timeType === b.timeType && a.date === b.date
+                    return a.timeType === b.timeType && +a.date === +b.date
                 })
-                console.log('exesting', exesting)
-                console.log('check different=========================:', toCreate)
+                //console.log('exesting', exesting)
+                //console.log('toCreate', toCreate)
                 if (toCreate && toCreate.length > 0) {
                     await db.Schedule.bulkCreate(toCreate)
                 }
@@ -206,7 +199,12 @@ let getScheduleByDate = (doctorId, date) => {
                     where: {
                         doctorId: doctorId,
                         date: date
-                    }
+                    },
+                    include: [
+                        { model: db.Allcode, as: 'timeTypeData', attributes: ['valueEn', 'valueVi'] },
+                    ],
+                    raw: false,
+                    nest: true
                 })
                 if (!dataSchedule) dataSchedule = []
                 resolve({
