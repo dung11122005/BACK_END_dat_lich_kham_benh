@@ -1,7 +1,7 @@
 import { where } from "sequelize"
 import db from "../models/index"
 import { raw } from "body-parser"
-import _ from 'lodash'
+import _, { includes } from 'lodash'
 require('dotenv').config()
 
 
@@ -151,6 +151,17 @@ let getDetailDoctorById = (inputId) => {
                     include: [
                         { model: db.Markdown, attributes: ['contentMarkdown', 'contentHTML', 'description'] },
                         { model: db.Allcode, as: 'positionData', attributes: ['valueEn', 'valueVi'] },
+                        {
+                            model: db.Doctor_Infor,
+                            attributes: {
+                                exclude: ['doctorId', 'id']
+                            },
+                            include: [
+                                { model: db.Allcode, as: 'priceTypedata', attributes: ['valueEn', 'valueVi'] },
+                                { model: db.Allcode, as: 'provinceTypeData', attributes: ['valueEn', 'valueVi'] },
+                                { model: db.Allcode, as: 'paymentTypeData', attributes: ['valueEn', 'valueVi'] },
+                            ]
+                        },
                     ],
                     raw: false,
                     nest: true
