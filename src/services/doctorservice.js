@@ -1,7 +1,7 @@
 import { where } from "sequelize"
 import db from "../models/index"
 import { raw } from "body-parser"
-import _, { includes, reject } from 'lodash'
+import _, { reject } from 'lodash'
 require('dotenv').config()
 
 
@@ -292,6 +292,56 @@ let getExtraInforDoctorById = (inputId) => {
         }
     })
 }
+
+let getProfileDoctorById = (inputId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!inputId) {
+                resolve({
+                    errcode: 1,
+                    errmessage: 'missing required parameter!'
+                })
+            } else {
+                let data = await db.User.findOne({
+                    where: {
+                        id: inputId
+                    },
+                    attributes: {
+                        exclude: ['password']
+                    },
+                    include: [
+                        { model: db.Markdown, attributes: ['contentMarkdown', 'contentHTML', 'description'] },
+                        { model: db.Allcode, as: 'positionData', attributes: ['valueEn', 'valueVi'] },
+                        {
+                            model: db.Doctor_Infor,
+                            attributes: {
+                                exclude: ['doctorId', 'id']
+                            },
+                            include: [
+                                { model: db.Allcode, as: 'priceTypedata', attributes: ['valueEn', 'valueVi'] },
+                                { model: db.Allcode, as: 'provinceTypeData', attributes: ['valueEn', 'valueVi'] },
+                                { model: db.Allcode, as: 'paymentTypeData', attributes: ['valueEn', 'valueVi'] },
+                            ]
+                        },
+                    ],
+                    raw: false,
+                    nest: true
+                })
+                if (data && data.image) {
+                    data.image = new Buffer(data.image, 'base64').toString('binary')
+                }
+                if (!data) data = {}
+                resolve({
+                    errcode: 0,
+                    data: data
+                })
+            }
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 module.exports = {
     getTopDoctorHome: getTopDoctorHome,
     getAllDoctors: getAllDoctors,
@@ -299,5 +349,6 @@ module.exports = {
     getDetailDoctorById: getDetailDoctorById,
     bulkCreateSchedule: bulkCreateSchedule,
     getScheduleByDate: getScheduleByDate,
-    getExtraInforDoctorById: getExtraInforDoctorById
+    getExtraInforDoctorById: getExtraInforDoctorById,
+    getProfileDoctorById: getProfileDoctorById
 }
