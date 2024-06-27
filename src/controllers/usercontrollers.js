@@ -91,7 +91,6 @@ let getAllcode = async (req, res) => {
             errmessage: 'error from server'
         })
     }
-
 }
 module.exports = {
     handlelogin: handlelogin,
