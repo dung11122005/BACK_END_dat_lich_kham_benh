@@ -41,6 +41,7 @@ let initwebrouter = (app) => {
 
 
     router.post('/api/patient-book-appointment', patientcontrollers.postBookAppointment)
+    router.post('/api/verify-book-appointment', patientcontrollers.postVerifyBookAppointment)
 
 
 
