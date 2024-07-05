@@ -2,6 +2,7 @@ import { where } from "sequelize"
 import db from "../models/index"
 import { raw } from "body-parser"
 import _, { reject } from 'lodash'
+import emailService from './emailService'
 require('dotenv').config()
 
 
@@ -387,7 +388,7 @@ let getListPatientForDoctor = (doctorId, date) => {
                                 { model: db.Allcode, as: 'genderData', attributes: ['valueVi', 'valueEn'] }
                             ],
                         },
-
+                        { model: db.Allcode, as: 'timeTypeDataPatient', attributes: ['valueVi', 'valueEn'] }
                     ],
                     raw: false,
                     nest: true
@@ -395,6 +396,46 @@ let getListPatientForDoctor = (doctorId, date) => {
                 resolve({
                     errcode: 0,
                     data: data
+                })
+            }
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+
+let sendRemedy = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.email || !data.doctorId || !data.patientId || !data.timetype) {
+
+                resolve({
+                    errcode: 1,
+                    errmessage: 'missing required parameter!'
+                })
+            } else {
+                //console.log('data:', data.timetype)
+                let appointment = await db.Booking.findOne({
+                    where: {
+                        doctorId: data.doctorId,
+                        patientId: data.patientId,
+                        timeType: data.timetype,
+                        statusId: 'S2'
+                    },
+                    raw: false
+                })
+                //console.log('data1:', data)
+                if (appointment) {
+                    appointment.statusId = 'S3'
+                    await appointment.save()
+                }
+                console.log('language', data.language)
+                await emailService.sendAttachment(data)
+
+                resolve({
+                    errcode: 0,
+                    errmessage: 'ok'
                 })
             }
         } catch (e) {
@@ -413,5 +454,6 @@ module.exports = {
     getScheduleByDate: getScheduleByDate,
     getExtraInforDoctorById: getExtraInforDoctorById,
     getProfileDoctorById: getProfileDoctorById,
-    getListPatientForDoctor: getListPatientForDoctor
+    getListPatientForDoctor: getListPatientForDoctor,
+    sendRemedy: sendRemedy
 }
